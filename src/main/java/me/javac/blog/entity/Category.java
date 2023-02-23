@@ -54,6 +54,17 @@ public class Category implements Serializable {
     @TableLogic
     private Byte isDeleted;
 
+    @TableField(exist = false)
+    private Long articleCount;
+
+    public Long getArticleCount() {
+        return articleCount;
+    }
+
+    public void setArticleCount(Long articleCount) {
+        this.articleCount = articleCount;
+    }
+
     public Long getId() {
         return id;
     }

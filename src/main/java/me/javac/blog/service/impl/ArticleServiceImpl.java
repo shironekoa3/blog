@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author shironekoa3
@@ -16,5 +16,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements IArticleService {
+
+
+    public boolean saveArticle(Article article) {
+        // 判断分类是否存在
+
+        return false;
+    }
+
 
 }

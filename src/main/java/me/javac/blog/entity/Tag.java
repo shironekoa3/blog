@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -16,6 +19,7 @@ import java.time.LocalDateTime;
  * @author shironekoa3
  * @since 2022-11-15
  */
+
 public class Tag implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,6 +57,17 @@ public class Tag implements Serializable {
      */
     @TableLogic
     private Byte isDeleted;
+
+    @TableField(exist = false)
+    private Long refCount;
+
+    public Long getRefCount() {
+        return refCount;
+    }
+
+    public void setRefCount(Long refCount) {
+        this.refCount = refCount;
+    }
 
     public Long getId() {
         return id;

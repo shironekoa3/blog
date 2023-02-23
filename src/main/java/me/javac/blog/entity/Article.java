@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -93,6 +94,28 @@ public class Article implements Serializable {
      */
     @TableLogic
     private Byte isDeleted;
+
+    @TableField(exist = false)
+    private Category category;
+
+    @TableField(exist = false)
+    private List<Tag> tags;
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 
     public Long getId() {
         return id;
