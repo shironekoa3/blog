@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
  * @author shironekoa3
  * @since 2022-11-15
  */
+
+@Data
 public class Article implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -95,157 +99,16 @@ public class Article implements Serializable {
     @TableLogic
     private Byte isDeleted;
 
+    /**
+     * 文章分类
+     */
     @TableField(exist = false)
     private Category category;
 
+    /**
+     * 文章标签列表
+     */
     @TableField(exist = false)
     private List<Tag> tags;
 
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
-    public Byte getIsTop() {
-        return isTop;
-    }
-
-    public void setIsTop(Byte isTop) {
-        this.isTop = isTop;
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Integer getViewCount() {
-        return viewCount;
-    }
-
-    public void setViewCount(Integer viewCount) {
-        this.viewCount = viewCount;
-    }
-
-    public Byte getIsComment() {
-        return isComment;
-    }
-
-    public void setIsComment(Byte isComment) {
-        this.isComment = isComment;
-    }
-
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Byte getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Byte isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-        "id = " + id +
-        ", title = " + title +
-        ", content = " + content +
-        ", summary = " + summary +
-        ", categoryId = " + categoryId +
-        ", thumbnail = " + thumbnail +
-        ", isTop = " + isTop +
-        ", status = " + status +
-        ", viewCount = " + viewCount +
-        ", isComment = " + isComment +
-        ", createBy = " + createBy +
-        ", createTime = " + createTime +
-        ", updateTime = " + updateTime +
-        ", isDeleted = " + isDeleted +
-        "}";
-    }
 }

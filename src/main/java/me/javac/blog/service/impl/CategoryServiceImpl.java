@@ -1,12 +1,16 @@
 package me.javac.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import me.javac.blog.entity.Article;
 import me.javac.blog.entity.Category;
+import me.javac.blog.mapper.ArticleMapper;
 import me.javac.blog.mapper.CategoryMapper;
 import me.javac.blog.service.ICategoryService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -21,10 +25,42 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements ICategoryService {
 
-    private final CategoryMapper categoryMapper;
+    private final ArticleMapper articleMapper;
 
     @Override
     public List<Category> list() {
-        return categoryMapper.listAll();
+        List<Category> categoryList = super.list();
+
+        // 填充引用次数
+        for (Category category : categoryList) {
+            QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
+            articleQueryWrapper.eq("category_id", category.getId());
+            Long aLong = articleMapper.selectCount(articleQueryWrapper);
+            category.setArticleCount(aLong);
+        }
+        return categoryList;
+    }
+
+    @Override
+    public boolean saveOrUpdate(Category entity) {
+        // 判断名称是否已经存在
+        QueryWrapper<Category> categoryQueryWrapper = new QueryWrapper<>();
+        categoryQueryWrapper.eq("name", entity.getName());
+        Category tempCategory = getOne(categoryQueryWrapper);
+        if (tempCategory != null) {
+            return false;   // 存在同名则返回 false
+        }
+        return super.saveOrUpdate(entity);
+    }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        // 判断是否有文章关联标签
+        QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
+        articleQueryWrapper.eq("category_id", id);
+        if (articleMapper.selectCount(articleQueryWrapper) > 0) {
+            return false;
+        }
+        return super.removeById(id);
     }
 }

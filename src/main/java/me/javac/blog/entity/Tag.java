@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
  * @author shironekoa3
  * @since 2022-11-15
  */
-
+@Data
 public class Tag implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,74 +59,11 @@ public class Tag implements Serializable {
     @TableLogic
     private Byte isDeleted;
 
+    /**
+     * 引用次数
+     */
     @TableField(exist = false)
     private Long refCount;
 
-    public Long getRefCount() {
-        return refCount;
-    }
 
-    public void setRefCount(Long refCount) {
-        this.refCount = refCount;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Byte getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Byte isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-        "id = " + id +
-        ", name = " + name +
-        ", description = " + description +
-        ", createTime = " + createTime +
-        ", updateTime = " + updateTime +
-        ", isDeleted = " + isDeleted +
-        "}";
-    }
 }
