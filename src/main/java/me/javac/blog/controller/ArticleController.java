@@ -6,8 +6,6 @@ import me.javac.blog.service.IArticleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
-
 /**
  * <p>
  * 前端控制器

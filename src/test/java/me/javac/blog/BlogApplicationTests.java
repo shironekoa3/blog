@@ -47,7 +47,7 @@ class BlogApplicationTests {
             queryWrapper.eq("name", tags.get(i).getName());
 
             Tag tempTag = tagService.getOne(queryWrapper);
-            if(tempTag == null) {
+            if (tempTag == null) {
                 tagService.save(tags.get(i));
             } else {
                 tags.set(i, tempTag);
