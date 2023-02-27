@@ -12,5 +12,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-11-15
  */
 public interface IOptionService extends IService<Option> {
+    boolean updateByKey(String key, String value);
+
+    boolean addViewCount();
 
 }

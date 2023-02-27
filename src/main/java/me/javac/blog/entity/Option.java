@@ -1,10 +1,6 @@
 package me.javac.blog.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,6 +15,7 @@ import java.time.LocalDateTime;
  * @since 2022-11-15
  */
 @Data
+@TableName(value = "`option`")
 public class Option implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,11 +29,13 @@ public class Option implements Serializable {
     /**
      * 配置项
      */
+    @TableField(value = "`key`")
     private String key;
 
     /**
      * 配置值
      */
+    @TableField(value = "`value`")
     private String value;
 
     /**
