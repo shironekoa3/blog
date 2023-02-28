@@ -1,13 +1,17 @@
 package me.javac.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.injector.methods.SelectOne;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Option;
 import me.javac.blog.mapper.OptionMapper;
 import me.javac.blog.service.IOptionService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -21,23 +25,54 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OptionServiceImpl extends ServiceImpl<OptionMapper, Option> implements IOptionService {
 
-    private final OptionMapper optionMapper;
-
     @Override
-    public boolean updateByKey(String key, String value) {
-        UpdateWrapper<Option> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("`key`", key);
-        Option o = new Option();
-        o.setValue(value);
-        return optionMapper.update(o, updateWrapper) == 1;
+    public boolean updateOptionByKey(Option option) {
+        LambdaQueryWrapper<Option> optionLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        optionLambdaQueryWrapper.eq(Option::getKey, option.getKey());
+        Option sourceOption = super.getOne(optionLambdaQueryWrapper);
+        if(sourceOption != null) {
+            sourceOption.setValue(option.getValue());
+            sourceOption.setUpdateTime(null);
+            return super.updateById(sourceOption);
+        }
+        return false;
     }
 
     @Override
-    public boolean addViewCount() {
-        QueryWrapper<Option> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("`key`", "viewCount");
-        Option option = optionMapper.selectOne(queryWrapper);
-        option.setValue(String.valueOf(Integer.parseInt(option.getValue()) + 1));
-        return optionMapper.updateById(option) == 1;
+    public boolean updateOptions(List<Option> optionList) {
+        List<Option> sourceOptionList = super.list();
+        for (Option option : optionList) {
+            for (Option sourceOption : sourceOptionList) {
+                if (sourceOption.getKey().equals(option.getKey())) {
+                    if (!sourceOption.getValue().equals(option.getValue())) {
+                        sourceOption.setUpdateTime(null);
+                        sourceOption.setValue(option.getValue());
+                        super.updateById(sourceOption);
+                    }
+                    break;
+                }
+            }
+        }
+        return true;
     }
+
+    @Override
+    public List<Option> listHomePageOptions() {
+        List<Option> optionList = super.list();
+
+        // 访问量 + 1
+        Option viewCount = null;
+        for (Option option : optionList) {
+            if ("viewCount".equals(option.getKey())) {
+                viewCount = option;
+                break;
+            }
+        }
+        if (viewCount != null) {
+            viewCount.setValue(String.valueOf(Integer.parseInt(viewCount.getValue()) + 1));
+            super.updateById(viewCount);
+        }
+        return optionList;
+    }
+
 }

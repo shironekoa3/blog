@@ -1,16 +1,19 @@
 package me.javac.blog.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.javac.blog.entity.Option;
+import me.javac.blog.entity.Tag;
+import me.javac.blog.service.IArticleService;
 import me.javac.blog.service.IOptionService;
+import me.javac.blog.service.ITagService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author shironekoa3
@@ -22,19 +25,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class OptionController {
 
     private final IOptionService optionService;
+
     @GetMapping("/list")
     public Object list() {
         return ResponseEntity.ok(optionService.list());
     }
-
-    @GetMapping("/set")
-    public Object set( String key,  String value) {
-        return ResponseEntity.ok(optionService.updateByKey(key, value));
+    @GetMapping("/listHome")
+    public Object listHome() {
+        return ResponseEntity.ok(optionService.listHomePageOptions());
     }
-
-    @GetMapping("/addView")
-    public Object addView() {
-        return ResponseEntity.ok(optionService.addViewCount());
+    @PostMapping("/change")
+    public Object change(@RequestBody List<Option> optionList) {
+        return ResponseEntity.ok(optionService.updateOptions(optionList));
     }
 
 }

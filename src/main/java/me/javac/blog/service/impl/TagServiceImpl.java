@@ -1,19 +1,18 @@
 package me.javac.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
-import me.javac.blog.entity.Article;
 import me.javac.blog.entity.ArticleTag;
-import me.javac.blog.entity.Category;
 import me.javac.blog.entity.Tag;
 import me.javac.blog.mapper.ArticleTagMapper;
 import me.javac.blog.mapper.TagMapper;
-import me.javac.blog.service.IArticleTagService;
 import me.javac.blog.service.ITagService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,5 +65,28 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
             return false;
         }
         return super.removeById(id);
+    }
+
+    /**
+     * 通过文章ID获取所有标签
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<Tag> getTagsByArticleId(Long id) {
+        LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        articleTagLambdaQueryWrapper.eq(ArticleTag::getArticleId, id);
+        List<ArticleTag> articleTagList = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
+
+        if (articleTagList.size() == 0) {
+            return new ArrayList<>();
+        }
+
+        List<Long> tagIds = new ArrayList<>();
+        for (ArticleTag articleTag : articleTagList) {
+            tagIds.add(articleTag.getTagId());
+        }
+        return super.listByIds(tagIds);
     }
 }

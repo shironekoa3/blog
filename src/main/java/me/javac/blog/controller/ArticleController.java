@@ -27,8 +27,21 @@ public class ArticleController {
     }
 
     @GetMapping("/list")
-    public Object list() {
-        return ResponseEntity.ok(articleService.list());
+    public Object list(@RequestParam Integer p, @RequestParam Integer size) {
+        if (p == null || size == null) {
+            p = 1;
+            size = 10;
+        }
+        return ResponseEntity.ok(articleService.listPage(p, size, null));
+    }
+
+    @GetMapping("/listHome")
+    public Object listHome(@RequestParam Integer p, @RequestParam Integer size) {
+        if (p == null || size == null) {
+            p = 1;
+            size = 10;
+        }
+        return ResponseEntity.ok(articleService.listHomeArticles(p, size));
     }
 
     @PostMapping("/change")
