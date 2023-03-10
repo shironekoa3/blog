@@ -7,11 +7,13 @@ import me.javac.blog.entity.Article;
 import me.javac.blog.entity.Tag;
 import me.javac.blog.service.IArticleService;
 import me.javac.blog.service.ICategoryService;
+import me.javac.blog.service.ICommentService;
 import me.javac.blog.service.ITagService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @SpringBootTest
@@ -31,15 +33,18 @@ class BlogApplicationTests {
     @Autowired
     IArticleService articleService;
 
+
+    @Resource
+    ICommentService commentService;
+
     @Test
     void contextLoads() {
 
 //        IPage<Article> articleIPage = articleService.listArticleSimplePage();
 //        System.out.println(articleIPage.toString());
 
-
-        List<Tag> tagsByArticleId = tagService.getTagsByArticleId(16l);
-        tagsByArticleId.forEach(System.out::println);
+        String qqInfo = commentService.getQQInfo("1124240020");
+        System.out.println(qqInfo);
     }
 
 

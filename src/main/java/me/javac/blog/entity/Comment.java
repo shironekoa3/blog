@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author shironekoa3
@@ -43,6 +43,26 @@ public class Comment implements Serializable {
      * 评论父编号
      */
     private Long rootId;
+
+    /**
+     * 评论者头像URL
+     */
+    private String avatar;
+
+    /**
+     * 评论者用户名
+     */
+    private String nick;
+
+    /**
+     * 评论者邮箱
+     */
+    private String email;
+
+    /**
+     * 评论者网站
+     */
+    private String website;
 
     /**
      * 评论内容
