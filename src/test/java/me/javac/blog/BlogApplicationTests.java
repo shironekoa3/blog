@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
 import me.javac.blog.controller.TagController;
 import me.javac.blog.entity.Article;
+import me.javac.blog.entity.Comment;
 import me.javac.blog.entity.Tag;
 import me.javac.blog.service.IArticleService;
 import me.javac.blog.service.ICategoryService;
@@ -43,8 +44,11 @@ class BlogApplicationTests {
 //        IPage<Article> articleIPage = articleService.listArticleSimplePage();
 //        System.out.println(articleIPage.toString());
 
-        String qqInfo = commentService.getQQInfo("1124240020");
-        System.out.println(qqInfo);
+//        String qqInfo = commentService.getQQInfo("1124240020");
+//        System.out.println(qqInfo);
+
+        List<Comment> comments = commentService.listAllAndArticleTitle();
+        comments.forEach(System.out::println);
     }
 
 

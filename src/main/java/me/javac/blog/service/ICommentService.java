@@ -19,4 +19,6 @@ public interface ICommentService extends IService<Comment> {
 
     String getQQInfo(String qq);
 
+    List<Comment> listAllAndArticleTitle();
+
 }

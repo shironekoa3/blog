@@ -87,5 +87,9 @@ public class Comment implements Serializable {
     @TableLogic
     private Byte isDeleted;
 
-
+    /**
+     * 文章标题
+     */
+    @TableField(exist = false)
+    private String articleTitle;
 }

@@ -29,6 +29,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     private final RestTemplate restTemplate;
 
+    private final CommentMapper commentMapper;
+
     @Override
     public List<Comment> getByArticleId(Long id) {
         LambdaQueryWrapper<Comment> commentLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -40,6 +42,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public String getQQInfo(String qq) {
         String uri = "https://api.usuuu.com/qq/" + qq;
         return restTemplate.getForObject(uri, String.class);
+    }
+
+    @Override
+    public List<Comment> listAllAndArticleTitle() {
+        return commentMapper.selectAllAndArticleTitle();
     }
 
 

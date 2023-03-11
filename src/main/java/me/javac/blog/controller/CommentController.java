@@ -32,9 +32,19 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getByArticleId(id));
     }
 
+    @GetMapping(value = "/list")
+    public Object list() {
+        return ResponseEntity.ok(commentService.listAllAndArticleTitle());
+    }
+
     @PostMapping(value = "/save")
-    public Object save(@RequestBody Comment comment){
+    public Object save(@RequestBody Comment comment) {
         return ResponseEntity.ok(commentService.saveOrUpdate(comment));
+    }
+
+    @GetMapping("/delete/{id}")
+    public Object delete(@PathVariable Long id) {
+        return ResponseEntity.ok(commentService.removeById(id));
     }
 
 }
