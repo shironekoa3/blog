@@ -4,12 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Option;
-import me.javac.blog.mapper.ArticleMapper;
 import me.javac.blog.mapper.OptionMapper;
-import me.javac.blog.service.IArticleService;
-import me.javac.blog.service.ICategoryService;
 import me.javac.blog.service.IOptionService;
-import me.javac.blog.service.ITagService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
