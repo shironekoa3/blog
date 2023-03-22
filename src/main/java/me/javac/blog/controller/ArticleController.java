@@ -3,7 +3,8 @@ package me.javac.blog.controller;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Article;
 import me.javac.blog.service.IArticleService;
-import org.springframework.http.ResponseEntity;
+import me.javac.blog.utils.AjaxResult;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,36 +23,46 @@ public class ArticleController {
     private final IArticleService articleService;
 
     @GetMapping("/get/{id}")
-    public Object get(@PathVariable Long id) {
-        return ResponseEntity.ok(articleService.getById(id));
+    public AjaxResult get(@PathVariable Long id) {
+        return AjaxResult.success(articleService.getById(id));
     }
 
     @GetMapping("/list")
-    public Object list(@RequestParam Integer p, @RequestParam Integer size) {
+    public AjaxResult list(@RequestParam Integer p, @RequestParam Integer size) {
         if (p == null || size == null) {
             p = 1;
             size = 10;
         }
-        return ResponseEntity.ok(articleService.listPage(p, size, null));
+        return AjaxResult.success(articleService.listPage(p, size, null));
     }
 
     @GetMapping("/listHome")
-    public Object listHome(@RequestParam Integer p, @RequestParam Integer size) {
+    public AjaxResult listHome(@RequestParam Integer p, @RequestParam Integer size) {
         if (p == null || size == null) {
             p = 1;
             size = 10;
         }
-        return ResponseEntity.ok(articleService.listHomeArticles(p, size));
+        return AjaxResult.success(articleService.listHomeArticles(p, size));
     }
 
     @PostMapping("/change")
-    public Object change(@RequestBody Article article) {
-        return ResponseEntity.ok(articleService.saveOrUpdate(article));
+    @PreAuthorize("hasAuthority('admin')")
+    public AjaxResult change(@RequestBody Article article) {
+        if (articleService.saveOrUpdate(article)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
     }
 
     @GetMapping("/delete/{id}")
-    public Object delete(@PathVariable Long id) {
-        return ResponseEntity.ok(articleService.removeById(id));
+    @PreAuthorize("hasAuthority('admin')")
+    public AjaxResult delete(@PathVariable Long id) {
+        if (articleService.removeById(id)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
     }
 
 }

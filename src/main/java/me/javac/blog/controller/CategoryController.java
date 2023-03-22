@@ -3,7 +3,8 @@ package me.javac.blog.controller;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Category;
 import me.javac.blog.service.ICategoryService;
-import org.springframework.http.ResponseEntity;
+import me.javac.blog.utils.AjaxResult;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,18 +23,28 @@ public class CategoryController {
     private final ICategoryService categoryService;
 
     @GetMapping("/list")
-    public Object list() {
-        return ResponseEntity.ok(categoryService.list());
+    public AjaxResult list() {
+        return AjaxResult.success(categoryService.list());
     }
 
     @PostMapping("/change")
-    public Object add(@RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.saveOrUpdate(category));
+    @PreAuthorize("hasAuthority('admin')")
+    public AjaxResult add(@RequestBody Category category) {
+        if (categoryService.saveOrUpdate(category)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
     }
 
     @GetMapping("/delete/{id}")
-    public Object delete(@PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.removeById(id));
+    @PreAuthorize("hasAuthority('admin')")
+    public AjaxResult delete(@PathVariable Long id) {
+        if (categoryService.removeById(id)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
     }
 
 }

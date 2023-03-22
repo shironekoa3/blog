@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -59,12 +60,12 @@ public class Article implements Serializable {
     /**
      * 是否置顶（0否 1是）
      */
-    private Byte isTop;
+    private Boolean isTop;
 
     /**
      * 文章状态（0正常 1草稿）
      */
-    private Byte status;
+    private Boolean status;
 
     /**
      * 文章访问量
@@ -74,7 +75,7 @@ public class Article implements Serializable {
     /**
      * 是否允许评论（0否 1是）
      */
-    private Byte isComment;
+    private Boolean isComment;
 
     /**
      * 创建用户
@@ -84,12 +85,14 @@ public class Article implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 

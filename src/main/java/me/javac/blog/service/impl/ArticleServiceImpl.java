@@ -79,11 +79,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         // 添加文章与标签的对应关系
         for (Tag tag : entity.getTags()) {
-            ArticleTag tempAt = new ArticleTag();
-            tempAt.setArticleId(entity.getId());
-            tempAt.setTagId(tag.getId());
+            ArticleTag tempAt = new ArticleTag(entity.getId(), tag.getId());
             articleTagService.save(tempAt);
         }
+
+        // Lambda 表达式写法：
+//        List<ArticleTag> collect = entity.getTags()
+//                .stream().map(tag -> new ArticleTag(entity.getId(), tag.getId()))
+//                .collect(Collectors.toList());
+//        articleTagService.saveBatch(collect);
         return true;
     }
 
@@ -162,7 +166,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
 
         return articlePage;
-
     }
 
     /**
@@ -188,6 +191,5 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleLambdaQueryWrapper.orderByDesc(Article::getCreateTime);
         return listPage(pageNum, pageSize, articleLambdaQueryWrapper);
     }
-
 
 }

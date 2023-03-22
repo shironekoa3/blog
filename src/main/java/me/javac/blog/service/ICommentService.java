@@ -1,13 +1,14 @@
 package me.javac.blog.service;
 
-import me.javac.blog.entity.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fasterxml.jackson.databind.JsonNode;
+import me.javac.blog.entity.Comment;
 
 import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author shironekoa3
@@ -17,7 +18,7 @@ public interface ICommentService extends IService<Comment> {
 
     List<Comment> getByArticleId(Long id);
 
-    String getQQInfo(String qq);
+    JsonNode getQQInfo(String qq);
 
     List<Comment> listAllAndArticleTitle();
 

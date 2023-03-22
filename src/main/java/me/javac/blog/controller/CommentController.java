@@ -3,7 +3,8 @@ package me.javac.blog.controller;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Comment;
 import me.javac.blog.service.ICommentService;
-import org.springframework.http.ResponseEntity;
+import me.javac.blog.utils.AjaxResult;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -23,28 +24,37 @@ public class CommentController {
 
 
     @GetMapping(value = "/getQQInfo/{qq}")
-    public Object getQQInfo(@PathVariable String qq) {
-        return ResponseEntity.ok(commentService.getQQInfo(qq));
+    public AjaxResult getQQInfo(@PathVariable String qq) {
+        return AjaxResult.success(commentService.getQQInfo(qq));
     }
 
     @GetMapping("/get/{id}")
-    public Object get(@PathVariable Long id) {
-        return ResponseEntity.ok(commentService.getByArticleId(id));
+    public AjaxResult get(@PathVariable Long id) {
+        return AjaxResult.success(commentService.getByArticleId(id));
     }
 
     @GetMapping(value = "/list")
-    public Object list() {
-        return ResponseEntity.ok(commentService.listAllAndArticleTitle());
+    public AjaxResult list() {
+        return AjaxResult.success(commentService.listAllAndArticleTitle());
     }
 
     @PostMapping(value = "/save")
-    public Object save(@RequestBody Comment comment) {
-        return ResponseEntity.ok(commentService.saveOrUpdate(comment));
+    public AjaxResult save(@RequestBody Comment comment) {
+        if (commentService.saveOrUpdate(comment)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
     }
 
     @GetMapping("/delete/{id}")
-    public Object delete(@PathVariable Long id) {
-        return ResponseEntity.ok(commentService.removeById(id));
+    @PreAuthorize("hasAuthority('admin')")
+    public AjaxResult delete(@PathVariable Long id) {
+        if (commentService.removeById(id)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
     }
 
 }

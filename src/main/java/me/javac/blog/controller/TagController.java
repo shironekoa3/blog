@@ -3,7 +3,8 @@ package me.javac.blog.controller;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Tag;
 import me.javac.blog.service.ITagService;
-import org.springframework.http.ResponseEntity;
+import me.javac.blog.utils.AjaxResult;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,18 +23,28 @@ public class TagController {
     private final ITagService tagService;
 
     @GetMapping("/list")
-    public Object list() {
-        return ResponseEntity.ok(tagService.list());
+    public AjaxResult list() {
+        return AjaxResult.success(tagService.list());
     }
 
     @PostMapping("/change")
-    public Object add(@RequestBody Tag tag) {
-        return ResponseEntity.ok(tagService.saveOrUpdate(tag));
+    @PreAuthorize("hasAuthority('admin')")
+    public AjaxResult add(@RequestBody Tag tag) {
+        if (tagService.saveOrUpdate(tag)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
     }
 
     @GetMapping("/delete/{id}")
-    public Object delete(@PathVariable Long id) {
-        return ResponseEntity.ok(tagService.removeById(id));
+    @PreAuthorize("hasAuthority('admin')")
+    public AjaxResult delete(@PathVariable Long id) {
+        if (tagService.removeById(id)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
     }
 
 }

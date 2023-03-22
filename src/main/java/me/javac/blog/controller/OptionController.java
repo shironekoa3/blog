@@ -2,11 +2,9 @@ package me.javac.blog.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Option;
-import me.javac.blog.entity.Tag;
-import me.javac.blog.service.IArticleService;
 import me.javac.blog.service.IOptionService;
-import me.javac.blog.service.ITagService;
-import org.springframework.http.ResponseEntity;
+import me.javac.blog.utils.AjaxResult;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,16 +25,24 @@ public class OptionController {
     private final IOptionService optionService;
 
     @GetMapping("/list")
-    public Object list() {
-        return ResponseEntity.ok(optionService.list());
+    public AjaxResult list() {
+        return AjaxResult.success(optionService.list());
     }
+
     @GetMapping("/listHome")
-    public Object listHome() {
-        return ResponseEntity.ok(optionService.listHomePageOptions());
+    public AjaxResult listHome() {
+        return AjaxResult.success(optionService.listHomePageOptions());
     }
+
     @PostMapping("/change")
-    public Object change(@RequestBody List<Option> optionList) {
-        return ResponseEntity.ok(optionService.updateOptions(optionList));
+    @PreAuthorize("hasAuthority('admin')")
+    public AjaxResult change(@RequestBody List<Option> optionList) {
+        if (optionService.updateOptions(optionList)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
+
     }
 
 }

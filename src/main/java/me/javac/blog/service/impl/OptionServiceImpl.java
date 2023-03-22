@@ -1,9 +1,6 @@
 package me.javac.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.injector.methods.SelectOne;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Option;
@@ -30,7 +27,7 @@ public class OptionServiceImpl extends ServiceImpl<OptionMapper, Option> impleme
         LambdaQueryWrapper<Option> optionLambdaQueryWrapper = new LambdaQueryWrapper<>();
         optionLambdaQueryWrapper.eq(Option::getKey, option.getKey());
         Option sourceOption = super.getOne(optionLambdaQueryWrapper);
-        if(sourceOption != null) {
+        if (sourceOption != null) {
             sourceOption.setValue(option.getValue());
             sourceOption.setUpdateTime(null);
             return super.updateById(sourceOption);

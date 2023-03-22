@@ -1,15 +1,14 @@
 package me.javac.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import me.javac.blog.entity.Article;
 import me.javac.blog.entity.Comment;
 import me.javac.blog.mapper.CommentMapper;
 import me.javac.blog.service.ICommentService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -39,9 +38,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public String getQQInfo(String qq) {
+    public JsonNode getQQInfo(String qq) {
         String uri = "https://api.usuuu.com/qq/" + qq;
-        return restTemplate.getForObject(uri, String.class);
+        String jsonStringResult = restTemplate.getForObject(uri, String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readTree(jsonStringResult);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
