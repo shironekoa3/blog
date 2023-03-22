@@ -2,7 +2,9 @@ package me.javac.blog.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
  * @since 2022-11-15
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName(value = "`option`")
 public class Option implements Serializable {
 
@@ -60,4 +64,8 @@ public class Option implements Serializable {
     private Byte isDeleted;
 
 
+    public Option(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
 }

@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Article;
 import me.javac.blog.entity.Category;
+import me.javac.blog.entity.Option;
 import me.javac.blog.mapper.ArticleMapper;
 import me.javac.blog.mapper.CategoryMapper;
 import me.javac.blog.service.ICategoryService;
+import me.javac.blog.service.IOptionService;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -26,6 +28,8 @@ import java.util.List;
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements ICategoryService {
 
     private final ArticleMapper articleMapper;
+
+    private final IOptionService optionService;
 
     @Override
     public List<Category> list() {
@@ -50,7 +54,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         if (tempCategory != null) {
             return false;   // 存在同名则返回 false
         }
-        return super.saveOrUpdate(entity);
+
+        boolean b = super.saveOrUpdate(entity);
+        updateCategoryCountOption();
+        return b;
     }
 
     @Override
@@ -61,6 +68,20 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         if (articleMapper.selectCount(articleQueryWrapper) > 0) {
             return false;
         }
-        return super.removeById(id);
+        boolean b = super.removeById(id);
+        updateCategoryCountOption();
+        return b;
+    }
+
+    /**
+     * 更新设置里的分类数量
+     *
+     * @return 返回是否操作成功
+     */
+    public boolean updateCategoryCountOption() {
+        Option o = new Option();
+        o.setKey("categoryCount");
+        o.setValue(String.valueOf(count()));
+        return optionService.updateOptionByKey(o);
     }
 }

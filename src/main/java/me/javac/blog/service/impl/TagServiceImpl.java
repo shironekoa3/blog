@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.ArticleTag;
+import me.javac.blog.entity.Option;
 import me.javac.blog.entity.Tag;
 import me.javac.blog.mapper.ArticleTagMapper;
 import me.javac.blog.mapper.TagMapper;
+import me.javac.blog.service.IOptionService;
 import me.javac.blog.service.ITagService;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ import java.util.List;
 public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagService {
 
     private final ArticleTagMapper articleTagMapper;
+
+    private final IOptionService optionService;
 
     @Override
     public List<Tag> list() {
@@ -53,7 +57,10 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
         if (tempTag != null) {
             return false;   // 存在同名则返回 false
         }
-        return super.saveOrUpdate(entity);
+
+        boolean b = super.saveOrUpdate(entity);
+        updateTagCountOption();
+        return b;
     }
 
     @Override
@@ -64,7 +71,9 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
         if (articleTagMapper.selectCount(articleTagQueryWrapper) > 0) {
             return false;
         }
-        return super.removeById(id);
+        boolean b = super.removeById(id);
+        updateTagCountOption();
+        return b;
     }
 
     /**
@@ -88,5 +97,17 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
             tagIds.add(articleTag.getTagId());
         }
         return super.listByIds(tagIds);
+    }
+
+    /**
+     * 更新设置里的标签数量
+     *
+     * @return 返回是否操作成功
+     */
+    public boolean updateTagCountOption() {
+        Option o = new Option();
+        o.setKey("tagCount");
+        o.setValue(String.valueOf(count()));
+        return optionService.updateOptionByKey(o);
     }
 }
