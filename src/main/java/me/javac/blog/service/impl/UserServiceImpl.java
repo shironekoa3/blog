@@ -14,6 +14,7 @@ import me.javac.blog.vo.LoginVo;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +35,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     private final ILogininforService logininforService;
 
+    private final PasswordEncoder passwordEncoder;
+
+    public boolean createAdminUser(LoginVo loginVo) {
+        User user = new User();
+        user.setUsername(loginVo.getUsername());
+        user.setPassword(passwordEncoder.encode(loginVo.getPassword()));
+        user.setIdentity("admin");
+        return super.save(user);
+    }
+
     @Override
     public String login(HttpServletRequest request, LoginVo loginVo) {
+        if (super.count() == 0) {
+            createAdminUser(loginVo);
+        }
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(loginVo.getUsername(), loginVo.getPassword());

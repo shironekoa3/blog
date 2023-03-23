@@ -5,10 +5,7 @@ import me.javac.blog.service.IUserService;
 import me.javac.blog.utils.AjaxResult;
 import me.javac.blog.vo.LoginVo;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -43,8 +40,9 @@ public class UserController {
         return AjaxResult.success(result);
     }
 
-    @PostMapping("/logout")
-    public AjaxResult logout(String token) {
+    @GetMapping("/logout")
+    public AjaxResult logout(HttpServletRequest request) {
+        String token = request.getHeader("token");
         if (!StringUtils.hasLength(token)) {
             return AjaxResult.error("token 不能为空！");
         }
