@@ -3,14 +3,15 @@ package me.javac.blog;
 import lombok.extern.slf4j.Slf4j;
 import me.javac.blog.controller.TagController;
 import me.javac.blog.entity.Logininfor;
-import me.javac.blog.service.*;
+import me.javac.blog.service.IArticleService;
+import me.javac.blog.service.ICategoryService;
+import me.javac.blog.service.ILogininforService;
+import me.javac.blog.service.ITagService;
 import me.javac.blog.utils.RedisCache;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.annotation.Resource;
 
 @SpringBootTest
 @Slf4j
