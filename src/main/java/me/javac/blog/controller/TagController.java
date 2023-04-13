@@ -30,6 +30,9 @@ public class TagController {
     @PostMapping("/change")
     @PreAuthorize("hasAuthority('admin')")
     public AjaxResult add(@RequestBody Tag tag) {
+        if (tag.getName().equals("")) {
+            return AjaxResult.error("标签名称不能为空！");
+        }
         if (tagService.saveOrUpdate(tag)) {
             return AjaxResult.success();
         } else {

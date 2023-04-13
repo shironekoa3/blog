@@ -30,6 +30,9 @@ public class CategoryController {
     @PostMapping("/change")
     @PreAuthorize("hasAuthority('admin')")
     public AjaxResult add(@RequestBody Category category) {
+        if (category.getName().equals("")) {
+            return AjaxResult.error("分类名称不能为空！");
+        }
         if (categoryService.saveOrUpdate(category)) {
             return AjaxResult.success();
         } else {
