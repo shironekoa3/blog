@@ -1,10 +1,12 @@
 package me.javac.blog.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Article;
 import me.javac.blog.service.IArticleService;
 import me.javac.blog.utils.AjaxResult;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -28,12 +30,20 @@ public class ArticleController {
     }
 
     @GetMapping("/list")
-    public AjaxResult list(@RequestParam Integer p, @RequestParam Integer size) {
+    public AjaxResult list(@RequestParam Integer p, @RequestParam Integer size,
+                           @RequestParam String type, @RequestParam String keyword) {
         if (p == null || size == null) {
             p = 1;
             size = 10;
         }
-        return AjaxResult.success(articleService.listPage(p, size, null));
+        LambdaQueryWrapper<Article> lambdaQueryWrapper = null;
+        if (StringUtils.hasLength(type) && StringUtils.hasLength(keyword)) {
+            lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            if (type.equals("title")) {
+                lambdaQueryWrapper.like(Article::getTitle, keyword);
+            }
+        }
+        return AjaxResult.success(articleService.listPage(p, size, lambdaQueryWrapper));
     }
 
     @GetMapping("/listHome")

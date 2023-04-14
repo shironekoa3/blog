@@ -1,10 +1,13 @@
 package me.javac.blog.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Comment;
+import me.javac.blog.entity.Tag;
 import me.javac.blog.service.ICommentService;
 import me.javac.blog.utils.AjaxResult;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -33,11 +36,10 @@ public class CommentController {
         return AjaxResult.success(commentService.getByArticleId(id));
     }
 
-    @GetMapping(value = "/list")
-    public AjaxResult list() {
-        return AjaxResult.success(commentService.listAllAndArticleTitle());
+    @GetMapping("/list")
+    public AjaxResult list(@RequestParam String searchKey) {
+        return AjaxResult.success(commentService.listAllAndArticleTitle(searchKey));
     }
-
     @PostMapping(value = "/save")
     public AjaxResult save(@RequestBody Comment comment) {
         if (commentService.saveOrUpdate(comment)) {

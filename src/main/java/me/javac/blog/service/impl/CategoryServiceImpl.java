@@ -1,5 +1,6 @@
 package me.javac.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +32,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     private final IOptionService optionService;
 
-    @Override
-    public List<Category> list() {
-        List<Category> categoryList = super.list();
+    public List<Category> listAndSearch(Wrapper<Category> queryWrapper) {
+        List<Category> categoryList = super.list(queryWrapper);
 
         // 填充引用次数
         for (Category category : categoryList) {

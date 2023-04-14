@@ -1,10 +1,12 @@
 package me.javac.blog.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Tag;
 import me.javac.blog.service.ITagService;
 import me.javac.blog.utils.AjaxResult;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -23,8 +25,14 @@ public class TagController {
     private final ITagService tagService;
 
     @GetMapping("/list")
-    public AjaxResult list() {
-        return AjaxResult.success(tagService.list());
+    public AjaxResult list(@RequestParam String searchKey) {
+        LambdaQueryWrapper<Tag> tagLambdaQueryWrapper = null;
+        if (StringUtils.hasLength(searchKey)) {
+            tagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            tagLambdaQueryWrapper.like(Tag::getName, searchKey);
+            tagLambdaQueryWrapper.or().like(Tag::getDescription, searchKey);
+        }
+        return AjaxResult.success(tagService.listAndSearch(tagLambdaQueryWrapper));
     }
 
     @PostMapping("/change")

@@ -1,5 +1,6 @@
 package me.javac.blog.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import me.javac.blog.entity.Tag;
 
@@ -14,6 +15,8 @@ import java.util.List;
  * @since 2022-11-15
  */
 public interface ITagService extends IService<Tag> {
+
+    List<Tag> listAndSearch(Wrapper<Tag> queryWrapper);
 
     List<Tag> getTagsByArticleId(Long id);
 

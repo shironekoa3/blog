@@ -1,5 +1,6 @@
 package me.javac.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -33,9 +34,8 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
 
     private final IOptionService optionService;
 
-    @Override
-    public List<Tag> list() {
-        List<Tag> tagList = super.list();
+    public List<Tag> listAndSearch(Wrapper<Tag> queryWrapper) {
+        List<Tag> tagList = super.list(queryWrapper);
 
         // 填充引用次数
         for (Tag tag : tagList) {

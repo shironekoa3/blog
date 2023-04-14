@@ -50,8 +50,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public List<Comment> listAllAndArticleTitle() {
-        return commentMapper.selectAllAndArticleTitle();
+    public List<Comment> listAllAndArticleTitle(String searchKey) {
+        return commentMapper.selectAllAndArticleTitle(searchKey == null ? "" : searchKey);
     }
 
 

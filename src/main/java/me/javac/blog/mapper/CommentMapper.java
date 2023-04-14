@@ -16,7 +16,13 @@ import java.util.List;
  */
 public interface CommentMapper extends BaseMapper<Comment> {
 
-    @Select("SELECT c.*,a.title as articleTitle FROM `comment` AS c, article AS a WHERE c.`article_id`=a.`id` AND c.`is_deleted`=0")
-    List<Comment> selectAllAndArticleTitle();
+    @Select("SELECT c.*,a.title as articleTitle " +
+            "FROM `comment` AS c, article AS a " +
+            "WHERE c.`article_id`=a.`id` AND c.`is_deleted`=0 " +
+            "AND " +
+            "(a.title LIKE CONCAT('%',#{searchKey},'%') " +
+            "OR c.content LIKE CONCAT('%',#{searchKey},'%') " +
+            "OR c.nick LIKE CONCAT('%',#{searchKey},'%'))")
+    List<Comment> selectAllAndArticleTitle(String searchKey);
 
 }

@@ -20,6 +20,6 @@ public interface ICommentService extends IService<Comment> {
 
     JsonNode getQQInfo(String qq);
 
-    List<Comment> listAllAndArticleTitle();
+    List<Comment> listAllAndArticleTitle(String searchKey);
 
 }
