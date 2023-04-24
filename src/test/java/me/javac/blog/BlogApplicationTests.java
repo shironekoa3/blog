@@ -2,7 +2,6 @@ package me.javac.blog;
 
 import lombok.extern.slf4j.Slf4j;
 import me.javac.blog.controller.TagController;
-import me.javac.blog.mapper.AccessMapper;
 import me.javac.blog.service.IArticleService;
 import me.javac.blog.service.ICategoryService;
 import me.javac.blog.service.ILogininforService;
