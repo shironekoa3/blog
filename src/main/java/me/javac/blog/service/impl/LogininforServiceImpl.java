@@ -2,7 +2,6 @@ package me.javac.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import eu.bitwalker.useragentutils.UserAgent;
 import me.javac.blog.entity.Logininfor;
 import me.javac.blog.mapper.LogininforMapper;
 import me.javac.blog.service.ILogininforService;
@@ -10,6 +9,8 @@ import me.javac.blog.utils.ip.AddressUtils;
 import me.javac.blog.utils.ip.IpUtils;
 import me.javac.blog.vo.LoginVo;
 import org.springframework.stereotype.Service;
+import ua_parser.Client;
+import ua_parser.Parser;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,12 +28,15 @@ public class LogininforServiceImpl extends ServiceImpl<LogininforMapper, Loginin
     @Override
     public boolean saveLogininfor(HttpServletRequest request, LoginVo loginVo) {
         String userAgentString = request.getHeader("User-Agent");
-        UserAgent userAgent = UserAgent.parseUserAgentString(userAgentString);
+        Parser uaParser = new Parser();
+        Client c = uaParser.parse(userAgentString);
 
         String ip = IpUtils.getIpAddr();
         String address = AddressUtils.getRealAddressByIP(ip);
-        String os = userAgent.getOperatingSystem().getName();
-        String browser = userAgent.getBrowser().getName();
+        String os = c.os.family + " " + c.os.major;
+        String browser = c.userAgent.family + " " +
+                c.userAgent.major + "." + c.userAgent.minor + "." + c.userAgent.patch;
+
 
         Logininfor logininfor = new Logininfor();
         logininfor.setUsername(loginVo.getUsername());

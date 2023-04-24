@@ -1,12 +1,10 @@
 package me.javac.blog.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Article;
 import me.javac.blog.service.IArticleService;
 import me.javac.blog.utils.AjaxResult;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,29 +28,36 @@ public class ArticleController {
     }
 
     @GetMapping("/list")
-    public AjaxResult list(@RequestParam Integer p, @RequestParam Integer size,
-                           @RequestParam String type, @RequestParam String keyword) {
+    public AjaxResult list(@RequestParam(required = false) Integer p,
+                           @RequestParam(required = false) Integer size,
+                           @RequestParam(required = false) String type,
+                           @RequestParam(required = false) String keyword) {
         if (p == null || size == null) {
             p = 1;
             size = 10;
         }
-        LambdaQueryWrapper<Article> lambdaQueryWrapper = null;
-        if (StringUtils.hasLength(type) && StringUtils.hasLength(keyword)) {
-            lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            if (type.equals("title")) {
-                lambdaQueryWrapper.like(Article::getTitle, keyword);
-            }
+        if (type == null || keyword == null) {
+            type = "";
+            keyword = "";
         }
-        return AjaxResult.success(articleService.listPage(p, size, lambdaQueryWrapper));
+
+        return AjaxResult.success(articleService.listAllArticle(p, size, type, keyword));
     }
 
     @GetMapping("/listHome")
-    public AjaxResult listHome(@RequestParam Integer p, @RequestParam Integer size) {
+    public AjaxResult listHome(@RequestParam(required = false) Integer p,
+                               @RequestParam(required = false) Integer size,
+                               @RequestParam(required = false) String type,
+                               @RequestParam(required = false) String keyword) {
         if (p == null || size == null) {
             p = 1;
             size = 10;
         }
-        return AjaxResult.success(articleService.listHomeArticles(p, size));
+        if (type == null) {
+            type = "";
+            keyword = "";
+        }
+        return AjaxResult.success(articleService.listHomeArticles(p, size, type, keyword));
     }
 
     @PostMapping("/change")

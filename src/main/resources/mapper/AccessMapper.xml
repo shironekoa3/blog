@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.javac.blog.mapper.AccessMapper">
+
+    <resultMap id="statisticalResult" type="me.javac.blog.vo.AccessStatisticalVo">
+        <result column="date" property="date"/>
+        <result column="count" property="count"/>
+    </resultMap>
+
+    <select id="statisticalByDays" parameterType="int" resultMap="statisticalResult">
+        SELECT DATE(create_time) 'date', COUNT(1) 'count'
+        FROM access
+        WHERE create_time BETWEEN DATE_SUB(NOW(), INTERVAL #{days} DAY) AND NOW()
+        GROUP BY DATE(create_time);
+    </select>
+
+
+</mapper>

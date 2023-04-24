@@ -25,7 +25,7 @@ public class TagController {
     private final ITagService tagService;
 
     @GetMapping("/list")
-    public AjaxResult list(@RequestParam String searchKey) {
+    public AjaxResult list(@RequestParam(required = false) String searchKey) {
         LambdaQueryWrapper<Tag> tagLambdaQueryWrapper = null;
         if (StringUtils.hasLength(searchKey)) {
             tagLambdaQueryWrapper = new LambdaQueryWrapper<>();

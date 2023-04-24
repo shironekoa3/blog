@@ -2,11 +2,13 @@ package me.javac.blog.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Option;
+import me.javac.blog.service.IAccessService;
 import me.javac.blog.service.IOptionService;
 import me.javac.blog.utils.AjaxResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -23,6 +25,8 @@ import java.util.List;
 public class OptionController {
 
     private final IOptionService optionService;
+    private final IAccessService accessService;
+
 
     @GetMapping("/list")
     public AjaxResult list() {
@@ -30,7 +34,9 @@ public class OptionController {
     }
 
     @GetMapping("/listHome")
-    public AjaxResult listHome() {
+    public AjaxResult listHome(HttpServletRequest request) {
+        // 记录访客信息
+        accessService.saveAccess(request);
         return AjaxResult.success(optionService.listHomePageOptions());
     }
 

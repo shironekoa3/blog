@@ -1,9 +1,10 @@
 package me.javac.blog.utils.ip;
 
 import me.javac.blog.utils.HttpUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.util.StringUtils;
 
 /**
@@ -33,9 +34,9 @@ public class AddressUtils {
                 return UNKNOWN;
             }
 
-            JSONObject obj = new JSONObject(rspStr);
-            String region = obj.getString("pro");
-            String city = obj.getString("city");
+            JSONObject obj = (JSONObject) JSONValue.parse(rspStr);
+            String region = (String) obj.get("pro");
+            String city = (String) obj.get("city");
             return String.format("%s %s", region, city);
         } catch (Exception e) {
             log.error("获取地理位置异常 {}", ip);

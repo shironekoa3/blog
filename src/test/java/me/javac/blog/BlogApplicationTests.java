@@ -2,7 +2,7 @@ package me.javac.blog;
 
 import lombok.extern.slf4j.Slf4j;
 import me.javac.blog.controller.TagController;
-import me.javac.blog.entity.Logininfor;
+import me.javac.blog.mapper.AccessMapper;
 import me.javac.blog.service.IArticleService;
 import me.javac.blog.service.ICategoryService;
 import me.javac.blog.service.ILogininforService;
@@ -41,19 +41,6 @@ class BlogApplicationTests {
 
     @Test
     void contextLoads() {
-//        IPage<Article> articleIPage = articleService.listArticleSimplePage();
-//        System.out.println(articleIPage.toString());
-
-//        String qqInfo = commentService.getQQInfo("1124240020");
-//        System.out.println(qqInfo);
-
-//        List<Comment> comments = commentService.listAllAndArticleTitle();
-//        comments.forEach(System.out::println);
-
-        Logininfor shironekoa3 = logininforService.getLastRecord("shirone2koa3");
-
-        System.out.println(shironekoa3);
-
 
     }
 

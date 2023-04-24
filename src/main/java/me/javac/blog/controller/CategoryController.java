@@ -25,7 +25,7 @@ public class CategoryController {
     private final ICategoryService categoryService;
 
     @GetMapping("/list")
-    public AjaxResult listAndSearch(@RequestParam String searchKey) {
+    public AjaxResult listAndSearch(@RequestParam(required = false) String searchKey) {
         LambdaQueryWrapper<Category> categoryLambdaQueryWrapper = null;
         if(StringUtils.hasLength(searchKey)) {
             categoryLambdaQueryWrapper = new LambdaQueryWrapper<>();

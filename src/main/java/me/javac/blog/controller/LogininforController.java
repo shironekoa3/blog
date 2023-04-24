@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Logininfor;
 import me.javac.blog.service.ILogininforService;
 import me.javac.blog.utils.AjaxResult;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,7 @@ public class LogininforController {
     private final ILogininforService logininforService;
 
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('admin')")
     public AjaxResult list() {
         LambdaQueryWrapper<Logininfor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.orderByDesc(Logininfor::getCreateTime);

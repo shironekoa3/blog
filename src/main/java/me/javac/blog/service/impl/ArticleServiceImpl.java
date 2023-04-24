@@ -9,9 +9,11 @@ import me.javac.blog.entity.*;
 import me.javac.blog.mapper.ArticleMapper;
 import me.javac.blog.service.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -53,7 +55,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         entity.setCategoryId(entity.getCategory().getId());
 
         // 判断标签是否存在（不存在则新增）
-        LambdaQueryWrapper<Tag> tagLambdaQueryWrapper = null;
+        LambdaQueryWrapper<Tag> tagLambdaQueryWrapper;
         for (int i = 0; i < entity.getTags().size(); i++) {
             tagLambdaQueryWrapper = new LambdaQueryWrapper<>();
             tagLambdaQueryWrapper.eq(Tag::getName, entity.getTags().get(i).getName());
@@ -139,21 +141,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return optionService.updateOptionByKey(o);
     }
 
-
     /**
-     * 分页查询文章
+     * 分页查询文章所有数据
      *
-     * @param pageNum            页编号
-     * @param pageSize           页大小
-     * @param lambdaQueryWrapper 查询条件
-     * @return 返回文章分页对象
+     * @param pageNum                   页编号
+     * @param pageSize                  页大小
+     * @param articleLambdaQueryWrapper 查询条件
+     * @return 文章列表
      */
-    public IPage<Article> listPage(Integer pageNum, Integer pageSize, LambdaQueryWrapper<Article> lambdaQueryWrapper) {
+    public IPage<Article> listPage(Integer pageNum, Integer pageSize, LambdaQueryWrapper<Article> articleLambdaQueryWrapper) {
         Page<Article> page = new Page<>();
         page.setCurrent(pageNum);
         page.setSize(pageSize);
 
-        Page<Article> articlePage = articleMapper.selectPage(page, lambdaQueryWrapper);
+
+        Page<Article> articlePage = articleMapper.selectPage(page, articleLambdaQueryWrapper);
 
         for (int i = 0; i < articlePage.getRecords().size(); i++) {
             // 设置文章分类
@@ -169,14 +171,38 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     /**
-     * 获取首页文章
+     * 获取后台管理所有文章数据
      *
-     * @param pageNum  页编号
-     * @param pageSize 页大小
-     * @return 返回文章分页对象
+     * @param pageNum 页码
+     * @param pageSize 页尺寸
+     * @param type 搜索类型（标题、分类、标签）
+     * @param keyword 搜索关键字
+     * @return 返回符合条件的文章列表
      */
     @Override
-    public IPage<Article> listHomeArticles(Integer pageNum, Integer pageSize) {
+    public IPage<Article> listAllArticle(Integer pageNum, Integer pageSize, String type, String keyword) {
+        LambdaQueryWrapper<Article> lambdaQueryWrapper = null;
+        if (StringUtils.hasLength(type) && StringUtils.hasLength(keyword)) {
+            lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            if (type.equals("title")) {
+                lambdaQueryWrapper.like(Article::getTitle, keyword);
+            }
+        }
+
+        return listPage(pageNum, pageSize, lambdaQueryWrapper);
+    }
+
+    /**
+     * 获取首页文章数据，删除了隐藏文章
+     *
+     * @param pageNum 页码
+     * @param pageSize 页尺寸
+     * @param type 搜索类型（标题、分类、标签）
+     * @param keyword 搜索关键字
+     * @return 返回符合条件的文章列表
+     */
+    @Override
+    public IPage<Article> listHomeArticles(Integer pageNum, Integer pageSize, String type, String keyword) {
         LambdaQueryWrapper<Article> articleLambdaQueryWrapper = new LambdaQueryWrapper<>();
         articleLambdaQueryWrapper.select(
                 Article::getId, Article::getTitle, Article::getCreateTime,
@@ -185,6 +211,35 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         // 过滤隐藏
         articleLambdaQueryWrapper.eq(Article::getStatus, 0);
+
+        // 搜索
+        if ("category".equals(type)) {
+            LambdaQueryWrapper<Category> categoryLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            categoryLambdaQueryWrapper.eq(Category::getName, keyword);
+            Category category = categoryService.getOne(categoryLambdaQueryWrapper);
+            if (category != null && category.getId() != 0) {
+                articleLambdaQueryWrapper.eq(Article::getCategoryId, category.getId());
+            }
+        } else if ("tag".equals(type)) {
+            LambdaQueryWrapper<Tag> tagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            tagLambdaQueryWrapper.eq(Tag::getName, keyword);
+            Tag tag = tagService.getOne(tagLambdaQueryWrapper);
+            if (tag != null && tag.getId() != 0) {
+                // 查询包含此标签的所有文章
+                LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId, tag.getId());
+                List<ArticleTag> articleTagList = articleTagService.list(articleTagLambdaQueryWrapper);
+
+                List<Long> articleIds = articleTagList.stream()
+                        .map(ArticleTag::getArticleId).collect(Collectors.toList());
+
+                if (articleIds.size() == 0) {
+                    articleIds.add(0L);
+                }
+                articleLambdaQueryWrapper.in(Article::getId, articleIds);
+            }
+        }
+
 
         // 排序
         articleLambdaQueryWrapper.orderByDesc(Article::getIsTop);
