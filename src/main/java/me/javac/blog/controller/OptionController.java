@@ -2,6 +2,8 @@ package me.javac.blog.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.javac.blog.entity.Option;
+import me.javac.blog.manager.AsyncFactory;
+import me.javac.blog.manager.AsyncManager;
 import me.javac.blog.service.IAccessService;
 import me.javac.blog.service.IOptionService;
 import me.javac.blog.utils.AjaxResult;
@@ -35,9 +37,12 @@ public class OptionController {
 
     @GetMapping("/listHome")
     public AjaxResult listHome(HttpServletRequest request) {
-        // 记录访客信息
-        accessService.saveAccess(request);
-        return AjaxResult.success(optionService.listHomePageOptions());
+        List<Option> options = optionService.listHomePageOptions();
+
+        // 异步记录访客信息
+        AsyncManager.me().execute(AsyncFactory.recordVisitor(request, options));
+
+        return AjaxResult.success(options);
     }
 
     @PostMapping("/change")

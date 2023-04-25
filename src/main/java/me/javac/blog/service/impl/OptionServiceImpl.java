@@ -55,22 +55,7 @@ public class OptionServiceImpl extends ServiceImpl<OptionMapper, Option> impleme
 
     @Override
     public List<Option> listHomePageOptions() {
-        List<Option> optionList = super.list();
-
-        // 访问量 + 1
-        Option viewCount = null;
-        for (Option option : optionList) {
-            if ("viewCount".equals(option.getKey())) {
-                viewCount = option;
-                break;
-            }
-        }
-        if (viewCount != null) {
-            viewCount.setValue(String.valueOf(Integer.parseInt(viewCount.getValue()) + 1));
-            super.updateById(viewCount);
-        }
-
-        return optionList;
+        return super.list();
     }
 
 }
